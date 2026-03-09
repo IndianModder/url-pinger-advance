@@ -305,6 +305,10 @@ export default {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
+      -webkit-user-select: none;  /* Chrome/Safari */
+      -moz-user-select: none;     /* Firefox */
+      -ms-user-select: none;      /* IE/Edge */
+      user-select: none;          /* Standard syntax */
     }
     
     body { 
@@ -455,6 +459,10 @@ export default {
       border-radius: 8px;
       font-size: 14px;
       background: white;
+      user-select: text;  /* Allow text selection in inputs */
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
     }
     
     .method-select {
@@ -479,6 +487,10 @@ export default {
       border-radius: 8px;
       font-size: 13px;
       background: white;
+      user-select: text;  /* Allow text selection in inputs */
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
     }
     
     .expected-input {
@@ -488,6 +500,10 @@ export default {
       border-radius: 8px;
       font-size: 13px;
       background: white;
+      user-select: text;  /* Allow text selection in inputs */
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
     }
     
     .delete-btn {
@@ -546,6 +562,10 @@ export default {
       text-decoration: none;
       word-break: break-all;
       flex: 1;
+      user-select: text;  /* Allow text selection in links */
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
     }
     
     .endpoint-link:active {
@@ -591,6 +611,22 @@ export default {
     .container {
       height: 100vh;
       overflow-y: auto;
+    }
+    
+    /* Allow text selection only where needed */
+    input, select, textarea, .endpoint-link, .url-link-input, .url-name-input, .expected-input {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
+      -ms-user-select: text !important;
+    }
+    
+    /* Buttons and interactive elements should not show selection */
+    button, .add-btn, .save-btn, .delete-btn, .method-select {
+      user-select: none !important;
+      -webkit-user-select: none !important;
+      -moz-user-select: none !important;
+      -ms-user-select: none !important;
     }
   </style>
 </head>
