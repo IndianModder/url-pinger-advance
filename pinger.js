@@ -305,10 +305,10 @@ export default {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      -webkit-user-select: none;  /* Chrome/Safari */
-      -moz-user-select: none;     /* Firefox */
-      -ms-user-select: none;      /* IE/Edge */
-      user-select: none;          /* Standard syntax */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
     
     body { 
@@ -320,6 +320,10 @@ export default {
       justify-content: center;
       padding: 0;
       margin: 0;
+      overflow: hidden; /* Prevent body scroll */
+      position: fixed;
+      width: 100%;
+      height: 100%;
     }
     
     .container {
@@ -332,11 +336,21 @@ export default {
       height: 100vh;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      position: relative;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      overscroll-behavior: none; /* Prevent pull-to-refresh */
     }
     
     .container::-webkit-scrollbar {
       width: 0;
       background: transparent;
+      display: none;
+    }
+    
+    /* Smooth scroll behavior */
+    .container {
+      scroll-behavior: smooth;
     }
     
     h1 { 
@@ -351,9 +365,12 @@ export default {
       gap: 8px;
       position: sticky;
       top: 0;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(255, 255, 255, 0.98);
       z-index: 10;
       backdrop-filter: blur(10px);
+      padding-top: 8px;
+      padding-bottom: 12px;
+      margin-top: -2px; /* Fix sticky gap */
     }
     
     .live-badge {
@@ -369,12 +386,12 @@ export default {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin: 16px 0;
+      margin: 8px 0 16px 0;
       position: sticky;
-      top: 60px;
-      background: rgba(255, 255, 255, 0.95);
+      top: 58px;
+      background: rgba(255, 255, 255, 0.98);
       z-index: 9;
-      padding: 8px 0;
+      padding: 8px 0 4px 0;
       backdrop-filter: blur(10px);
     }
     
@@ -385,6 +402,7 @@ export default {
       border-radius: 12px;
       text-align: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transform: translateZ(0); /* Hardware acceleration */
     }
     
     .stat-card .number {
@@ -403,7 +421,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin: 20px 0 12px 0;
+      margin: 12px 0 8px 0;
     }
     
     .section-header h3 {
@@ -426,13 +444,14 @@ export default {
       align-items: center;
       gap: 4px;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .url-list {
       background: #f8f9fa;
       border-radius: 12px;
       padding: 8px;
-      margin: 8px 0;
+      margin: 4px 0 8px 0;
     }
     
     .url-item { 
@@ -459,10 +478,11 @@ export default {
       border-radius: 8px;
       font-size: 14px;
       background: white;
-      user-select: text;  /* Allow text selection in inputs */
+      user-select: text;
       -webkit-user-select: text;
       -moz-user-select: text;
       -ms-user-select: text;
+      -webkit-appearance: none;
     }
     
     .method-select {
@@ -487,10 +507,11 @@ export default {
       border-radius: 8px;
       font-size: 13px;
       background: white;
-      user-select: text;  /* Allow text selection in inputs */
+      user-select: text;
       -webkit-user-select: text;
       -moz-user-select: text;
       -ms-user-select: text;
+      -webkit-appearance: none;
     }
     
     .expected-input {
@@ -500,10 +521,11 @@ export default {
       border-radius: 8px;
       font-size: 13px;
       background: white;
-      user-select: text;  /* Allow text selection in inputs */
+      user-select: text;
       -webkit-user-select: text;
       -moz-user-select: text;
       -ms-user-select: text;
+      -webkit-appearance: none;
     }
     
     .delete-btn {
@@ -515,13 +537,14 @@ export default {
       font-size: 12px;
       margin-top: 8px;
       cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .api-section {
       background: #f8f9fa;
       border-radius: 12px;
       padding: 12px;
-      margin: 20px 0;
+      margin: 16px 0;
     }
     
     .api-endpoint {
@@ -530,6 +553,10 @@ export default {
       padding: 12px;
       margin-bottom: 10px;
       border: 1px solid #e0e0e0;
+    }
+    
+    .api-endpoint:last-child {
+      margin-bottom: 0;
     }
     
     .endpoint-row {
@@ -562,7 +589,7 @@ export default {
       text-decoration: none;
       word-break: break-all;
       flex: 1;
-      user-select: text;  /* Allow text selection in links */
+      user-select: text;
       -webkit-user-select: text;
       -moz-user-select: text;
       -ms-user-select: text;
@@ -582,35 +609,44 @@ export default {
       background: #667eea;
       color: white;
       border: none;
-      padding: 12px 20px;
+      padding: 14px 20px;
       border-radius: 25px;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       width: 100%;
-      margin: 16px 0;
+      margin: 12px 0 8px 0;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .footer {
       margin-top: 20px;
+      margin-bottom: 10px;
       text-align: center;
       color: #666;
       font-size: 12px;
-      padding: 12px 0;
+      padding: 8px 0;
     }
     
     html, body {
       height: 100%;
+      width: 100%;
       overflow: hidden;
+      position: fixed;
+      -webkit-overflow-scrolling: auto;
     }
     
     .container {
-      height: 100vh;
-      overflow-y: auto;
+      height: 100%;
+      max-height: 100vh;
+      overflow-y: scroll;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      padding-bottom: 20px;
     }
     
     /* Allow text selection only where needed */
@@ -627,6 +663,17 @@ export default {
       -webkit-user-select: none !important;
       -moz-user-select: none !important;
       -ms-user-select: none !important;
+    }
+    
+    /* Fix touch scrolling */
+    * {
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+    
+    /* Smooth momentum scrolling */
+    .container {
+      -webkit-overflow-scrolling: touch;
     }
   </style>
 </head>
@@ -720,6 +767,9 @@ export default {
         <button class="delete-btn" onclick="this.closest('.url-item').remove()">🗑️ Delete</button>
       \`;
       urlList.appendChild(newItem);
+      
+      // Smooth scroll to new item
+      newItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     };
 
     window.deleteUrl = function(index) {
@@ -799,6 +849,13 @@ export default {
         window.open(link.href, '_blank');
       });
     });
+
+    // Prevent pull-to-refresh
+    document.body.addEventListener('touchstart', (e) => {
+      if (e.target === document.body) {
+        e.preventDefault();
+      }
+    }, { passive: false });
   </script>
 </body>
 </html>
