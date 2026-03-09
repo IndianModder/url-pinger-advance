@@ -24,6 +24,14 @@ export default {
   ],
 
   async scheduled(event, env, ctx) {
+    // KV se config load karo agar available ho
+    if (env.PING_STATS) {
+      const savedConfigs = await env.PING_STATS.get('urls_config', 'json');
+      if (savedConfigs && savedConfigs.length > 0) {
+        this.urlsToPing = savedConfigs;
+      }
+    }
+
     if (!this.urlsToPing || this.urlsToPing.length === 0) {
       console.log('⚠️ No URLs configured to ping');
       return;
@@ -35,6 +43,11 @@ export default {
     const summary = this.generateSummary(results);
     
     console.log(summary.text);
+    
+    // Results store karo
+    if (env.PING_STATS) {
+      ctx.waitUntil(this.storeResults(results, summary, env));
+    }
   },
 
   async pingAllUrls() {
@@ -123,7 +136,62 @@ export default {
     return { total, successful, failed, avgResponseTime, text, results };
   },
 
+  async storeResults(results, summary, env) {
+    if (!env.PING_STATS) return;
+    
+    const today = new Date().toISOString().split('T')[0];
+    const key = `stats:${today}`;
+    
+    try {
+      let stats = await env.PING_STATS.get(key, 'json') || {
+        date: today,
+        totalPings: 0,
+        totalSuccess: 0,
+        totalFailed: 0,
+        avgResponseTime: 0,
+        failures: []
+      };
+      
+      stats.totalPings += summary.total;
+      stats.totalSuccess += summary.successful;
+      stats.totalFailed += summary.failed;
+      stats.avgResponseTime = Math.round(
+        (stats.avgResponseTime * (stats.totalPings - summary.total) + 
+         summary.avgResponseTime * summary.total) / stats.totalPings
+      );
+      
+      summary.results
+        .filter(r => !r.success && r.error)
+        .forEach(r => {
+          stats.failures.push({
+            url: r.config.url,
+            name: r.config.name,
+            error: r.error,
+            timestamp: r.timestamp,
+            status: r.status
+          });
+        });
+      
+      if (stats.failures.length > 100) {
+        stats.failures = stats.failures.slice(-100);
+      }
+      
+      await env.PING_STATS.put(key, JSON.stringify(stats));
+      
+    } catch (error) {
+      console.error('Failed to store results in KV:', error);
+    }
+  },
+
   async fetch(request, env, ctx) {
+    // KV se config load karo
+    if (env.PING_STATS) {
+      const savedConfigs = await env.PING_STATS.get('urls_config', 'json');
+      if (savedConfigs && savedConfigs.length > 0) {
+        this.urlsToPing = savedConfigs;
+      }
+    }
+
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -132,6 +200,12 @@ export default {
       try {
         const newConfigs = await request.json();
         this.urlsToPing = newConfigs;
+        
+        // Save to KV
+        if (env.PING_STATS) {
+          await env.PING_STATS.put('urls_config', JSON.stringify(newConfigs));
+        }
+        
         return new Response(JSON.stringify({ 
           success: true, 
           message: "✅ URLs updated successfully",
@@ -256,7 +330,6 @@ export default {
       -webkit-overflow-scrolling: touch;
     }
     
-    /* Hide scrollbar but keep functionality */
     .container::-webkit-scrollbar {
       width: 0;
       background: transparent;
@@ -510,7 +583,6 @@ export default {
       padding: 12px 0;
     }
     
-    /* Full screen fit */
     html, body {
       height: 100%;
       overflow: hidden;
@@ -590,7 +662,6 @@ export default {
   </div>
 
   <script>
-    // Global functions for URL management
     window.addNewUrl = function() {
       const urlList = document.getElementById('urlList');
       const newItem = document.createElement('li');
@@ -602,6 +673,8 @@ export default {
             <option value="GET" selected>GET</option>
             <option value="POST">POST</option>
             <option value="HEAD">HEAD</option>
+            <option value="PUT">PUT</option>
+            <option value="DELETE">DELETE</option>
           </select>
         </div>
         <div class="url-details">
@@ -630,7 +703,6 @@ export default {
         const url = item.querySelector('.url-link-input')?.value || '';
         const expected = item.querySelector('.expected-input')?.value || '200';
         
-        // Parse expected status (can be single or comma-separated)
         let expectedStatus;
         if (expected.includes(',')) {
           expectedStatus = expected.split(',').map(s => parseInt(s.trim()));
@@ -664,7 +736,7 @@ export default {
           alert('✅ URLs updated successfully!');
           location.reload();
         } else {
-          alert('❌ Failed to update URLs');
+          alert('❌ Failed to update URLs: ' + data.message);
         }
       })
       .catch(error => {
@@ -685,7 +757,6 @@ export default {
       });
     };
 
-    // Make API stats link open in new tab properly
     document.querySelectorAll('.endpoint-link[target="_blank"]').forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -697,4 +768,4 @@ export default {
 </html>
     `;
   }
-}
+};

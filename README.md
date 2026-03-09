@@ -1,5 +1,5 @@
 ## 👨🏻‍💻 Developer
-* [![@vaibhavsatpute](https://img.shields.io/badge/VIEW%2520IN%2520TELEGRAM-2481cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/vaibhavsatpute)
+* [![@vaibhavsatpute](https://img.shields.io/badge/VIEW_IN_TELEGRAM-2481cc?style=social&logo=telegram&logoColor=2481cc)](https://t.me/vaibhavsatpute)
 
 
 # Cloudflare URL Pinger
