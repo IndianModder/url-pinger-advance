@@ -317,7 +317,7 @@ export default {
   </style>
 </head>
 <body>
-  <h1>🔍 @VAIBHAVSATPUTE URL Pinger Monitor</h1>
+  <h1>\u0000\u0001\u0000\u0000\u0001\u0001\u0001\u0001\u0000\u0000\u0001\ud83d\udd0d @VAIBHAVSATPUTE URL Pinger Monitor</h1>
   
   <div class="stats">
     <p><strong>Configured URLs:</strong> ${this.urlsToPing.length}</p>
