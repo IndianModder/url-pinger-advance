@@ -1,11 +1,11 @@
-name = "url-pinger-advance"
+name = "url-pinger-pro"
 main = "pinger.js"
 compatibility_date = "2023-12-01"
 
 # Environment variables
 [vars]
 ENVIRONMENT = "production"
-ALERT_WEBHOOK = "vaibhavsatpute"  # Add your Slack/Discord webhook URL for alerts
+ALERT_WEBHOOK = ""  # Add your Slack/Discord webhook URL for alerts
 LOG_LEVEL = "info"
 
 # Cron triggers - every minute
@@ -15,7 +15,7 @@ crons = ["*/10 * * * *"]
 # KV Namespace for storing ping statistics (optional but recommended)
 [[kv_namespaces]]
 binding = "PING_STATS"
-id = "226a654cbb174749a3236508c21321f7"  # Add your KV namespace ID after creating it
+id = ""  # Add your KV namespace ID after creating it
 preview_id = ""
 
 # Environment specific settings
