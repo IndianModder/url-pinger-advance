@@ -1,3 +1,7 @@
+## 👨🏻‍💻 Developer
+* [![@vaibhavsatpute](https://img.shields.io/badge/VIEW%2520IN%2520TELEGRAM-2481cc?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/vaibhavsatpute)
+
+
 # Cloudflare URL Pinger
 
 A simple Cloudflare Worker that pings multiple URLs every minute to keep them active.
