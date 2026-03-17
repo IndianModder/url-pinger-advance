@@ -1,7 +1,7 @@
 export default {
   urlsToPing: [
     {
-      url: "https://moon-userbot-qkda.onrender.com",
+      url: "https://moon-userbot-b2ok.onrender.com",
       name: "@vaibhavsatpute",
       method: "GET",
       expectedStatus: 200,
